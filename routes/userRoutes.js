@@ -12,7 +12,7 @@ router.post("/add-user", async (req, res) => {
     const savedUser = await userInfo.save();
     res.status(201).json({ success: true, message: "User added successfully", data: savedUser });
   } catch (error) {
-    res.status(500).json({ success: false, message: "Error saving user", error: error.message });
+    res.status(500).json({ success: false, message: "Error saving user1", error: error.message });
   }
 });
 
