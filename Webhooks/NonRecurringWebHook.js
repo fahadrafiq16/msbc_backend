@@ -98,7 +98,7 @@ const nonRecurringPaymentWebhook = async (req, res) => {
 
         } else  {
             console.log('Failed');
-            res.redirect('http://localhost:3000/?status=failed');
+            res.redirect('https://magnificent-horse-a4affe.netlify.app/?status=failed');
             // Optionally handle failure here
             // You can redirect to a URL or notify the user as needed
         }

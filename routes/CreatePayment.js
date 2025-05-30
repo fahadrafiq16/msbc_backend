@@ -20,7 +20,7 @@ router.post('/create-payment', async (req, res) => {
                 currency: 'EUR', // Change this if needed
             },
             description: `Payment for ${userInfo.voornaam}`, // Description for the payment
-            redirectUrl: `http://localhost:3000/mollie-redirect?name=${encodeURIComponent(userInfo.voornaam)}&email=${encodeURIComponent(userInfo.email)}&selectedOption=${encodeURIComponent(userInfo.selectedOption.title)}&subTitle=${encodeURIComponent(userInfo.selectedOption.subTitle)}`,
+            redirectUrl: `https://magnificent-horse-a4affe.netlify.app/mollie-redirect?name=${encodeURIComponent(userInfo.voornaam)}&email=${encodeURIComponent(userInfo.email)}&selectedOption=${encodeURIComponent(userInfo.selectedOption.title)}&subTitle=${encodeURIComponent(userInfo.selectedOption.subTitle)}`,
             webhookUrl: `${BASE_BACKEND_URL}/api/payment-webhook`, // Webhook URL to handle payment updates
             metadata: {
                 userInfo, // Additional user info you want to track

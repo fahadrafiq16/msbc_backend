@@ -90,7 +90,7 @@ app.post('/api/create-recurring-payment', async (req, res) => {
             description: 'Initial payment for recurring subscription',
             customerId: customer.id,
             sequenceType: 'first', // Indicate this is the first payment
-            redirectUrl: `http://localhost:3000/recurring-redirect?name=${encodeURIComponent(name)}&email=${encodeURIComponent(email)}`,
+            redirectUrl: `hhttps://magnificent-horse-a4affe.netlify.app/recurring-redirect?name=${encodeURIComponent(name)}&email=${encodeURIComponent(email)}`,
 
             webhookUrl: `${BASE_BACKEND_URL}/api/payment-recurring-webhook`,
             metadata: {
