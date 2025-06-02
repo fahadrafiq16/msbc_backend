@@ -4,8 +4,6 @@ const cors = require('cors');
 
 const router = express.Router();
 
-const BASE_FRONTEND_URL = process.env.BASE_FRONTEND_URL;
-const BASE_BACKEND_URL = process.env.BASE_BACKEND_URL;
 
 
 const mollieClient = createMollieClient({ apiKey: 'test_5CWPTEtF4FBvUwEnRcW2fMxBMwUzqt' });
@@ -68,41 +66,3 @@ router.post('/create-subscription', async (req, res) => {
 
 
 module.exports = router;
-
-
-
-/*
-
-router.post('/create-subscription', async (req, res) => {
-    const { customerId } = req.body;
-
-    if (!customerId) {
-        return res.status(400).json({ error: 'Customer ID is required' });
-    }
-
-    try {
-        const subscription = await mollieClient.customers_subscriptions.create({
-            customerId,
-            amount: {
-                value: '300.00',
-                currency: 'EUR',
-            },
-            times: 3,
-            interval: '1 day',
-            description: 'Monthly subscription for premium service',
-            webhookUrl: 'https://1171-39-55-119-111.ngrok-free.app/api/subscription-webhook',
-        });
-
-        console.log('Subscription created successfully:', subscription);
-        res.status(200).json(subscription);
-    } catch (error) {
-        console.error('Error creating subscription:', error);
-        res.status(500).json({ error: 'Failed to create subscription' });
-    }
-});
-
-
-
-module.exports = router;
-
-*/

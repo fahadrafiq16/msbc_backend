@@ -7,8 +7,7 @@ const router = express.Router();
 const mollieClient = createMollieClient({ apiKey: 'test_5CWPTEtF4FBvUwEnRcW2fMxBMwUzqt' });
 
 require('dotenv').config();
-const BASE_FRONTEND_URL = process.env.BASE_FRONTEND_URL;
-const BASE_BACKEND_URL = process.env.BASE_BACKEND_URL;
+
 // Mollie create payment For Non-Recurring Payments
 router.post('/create-payment', async (req, res) => {
     const { amount, userInfo } = req.body;
