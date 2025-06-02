@@ -7,8 +7,6 @@ const router = express.Router();
 const BASE_FRONTEND_URL = process.env.BASE_FRONTEND_URL;
 const BASE_BACKEND_URL = process.env.BASE_BACKEND_URL;
 
-console.log('Base Backend', BASE_BACKEND_URL);
-
 
 const mollieClient = createMollieClient({ apiKey: 'test_5CWPTEtF4FBvUwEnRcW2fMxBMwUzqt' });
 
@@ -27,7 +25,7 @@ router.post('/create-subscription', async (req, res) => {
 
         let firstSubscription = null;
         let recurringSubscription = null;
-        console.log('Webhook URL:', `${BASE_BACKEND_URL}/api/subscription-webhook`);
+        console.log('Webhook URL:', 'https://msbc-backend.vercel.app/api/subscription-webhook');
         if (extraAmount !== 0) {
             // Step 1: First payment with the extra option (if applicable)
             firstSubscription = await mollieClient.customers_subscriptions.create({
@@ -39,7 +37,7 @@ router.post('/create-subscription', async (req, res) => {
                 interval: '12 months',
                 times: 1, // Only for the first payment
                 description: 'Payment for Extra Meal',
-                webhookUrl: `${BASE_BACKEND_URL}/api/subscription-webhook`,
+                webhookUrl: 'https://msbc-backend.vercel.app/api/subscription-webhook',
             });
         }
 
@@ -55,7 +53,7 @@ router.post('/create-subscription', async (req, res) => {
             times: userInfo.selectedOption.quantity, // Set to the number of recurring payments
             
             description: 'Recurring subscription payment',
-            webhookUrl: `${BASE_BACKEND_URL}/api/subscription-webhook`,
+            webhookUrl: 'https://msbc-backend.vercel.app/api/subscription-webhook',
         });
 
         res.status(200).json({
