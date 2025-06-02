@@ -21,7 +21,7 @@ router.post('/create-payment', async (req, res) => {
             },
             description: `Payment for ${userInfo.voornaam}`, // Description for the payment
             redirectUrl: `https://magnificent-horse-a4affe.netlify.app/mollie-redirect?name=${encodeURIComponent(userInfo.voornaam)}&email=${encodeURIComponent(userInfo.email)}&selectedOption=${encodeURIComponent(userInfo.selectedOption.title)}&subTitle=${encodeURIComponent(userInfo.selectedOption.subTitle)}`,
-            webhookUrl: `${BASE_BACKEND_URL}/api/payment-webhook`, // Webhook URL to handle payment updates
+            webhookUrl: 'https://msbc-backend.vercel.app/api/payment-webhook', // Webhook URL to handle payment updates
             metadata: {
                 userInfo, // Additional user info you want to track
             },
