@@ -23,11 +23,11 @@ router.post('/create-payment', async (req, res) => {
     try {
         const payment = await mollieClient.payments.create({
             amount: {
-                value: amountStr,
+                value: amount, // Amount in the selected currency
                 currency: 'EUR',
             },
             description: `Payment for 123 ${userInfo.voornaam}`,
-            redirectUrl: `http://localhost:3000/mollie-redirect?name=${encodeURIComponent(userInfo.voornaam)}&email=${encodeURIComponent(userInfo.email)}&selectedOption=${encodeURIComponent(userInfo.selectedOption.title)}&subTitle=${encodeURIComponent(userInfo.selectedOption.subTitle)}`,
+            redirectUrl: `https://magnificent-horse-a4affe.netlify.app/mollie-redirect?name=${encodeURIComponent(userInfo.voornaam)}&email=${encodeURIComponent(userInfo.email)}&selectedOption=${encodeURIComponent(userInfo.selectedOption.title)}&subTitle=${encodeURIComponent(userInfo.selectedOption.subTitle)}`,
             webhookUrl: `${process.env.BASE_BACKEND_URL}/api/payment-webhook`,
             metadata: {
                 userInfo,
