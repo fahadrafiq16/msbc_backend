@@ -1,0 +1,183 @@
+// nodemailer-test.cjs
+const nodemailer = require('nodemailer');
+
+/**
+ * Sends an email using Nodemailer.
+ * @param {string} userEmail - Sender's email address.
+ * @param {string} appPassword - Sender's app password.
+ * @param {string} recipientEmail - Recipient's email address.
+ * @param {string} emailSubject - Subject of the email.
+ * @param {string} emailText - Plain text content of the email.
+ */
+const sendPTEmail = async (
+    bedrijfsnaam,
+    kvknummer,
+    BTWnummer,
+    bedrijfsemail,
+    telefoonnummer,
+    email,
+    voornaam,
+    achternaam,
+    geslachtooptions,
+    dayOfMonth,
+    month,
+    years,
+    postcode,
+    huisnummer,
+    adres,
+    woonplaats,
+    subTitle,
+    trainingTitle,
+    { selectedOptionTitle = '', selectedOptionAmount = 0, extraOptionTitle = '', extraOptionAmount = 0 } = {},
+    totalAmount,
+    clubAmount,
+    paymentId,
+    formattedDate,
+    toevoeging,
+    tussenvoegsel,
+) => {
+    // Create a transporter
+    const transporter = nodemailer.createTransport({
+        service: 'gmail',
+        auth: {
+            user: 'fahadrafiq16@gmail.com', // Replace with your Gmail address
+            pass: 'mwjuoyfenyuwesli', // Replace with your Google app password
+        },
+    });
+
+    // Define the email options
+    const mailOptions = {
+        from: 'Aanmelding@mysummerbodclub.nl', // Sender's email address
+         to: [email, 'ptruimtehuren@mysummerbodyclub.nl', 'fahadrafiq16@gmail.com'],
+        subject: 'Betaling en inschrijving is gelukt', // Email subject
+        html: `
+         <div style="border: 2px solid #F04D17; padding: 20px; font-size:15px; background-color: #f9f9f9; border-radius: 10px; font-family: Arial, sans-serif; color: #333;">
+                    <!-- Header Section -->
+                    <div style="text-align: center;">
+                        <img style="max-width: 150px; height: auto; display: block; margin: 0 auto;" src="https://mysummerbodyclub.nl/wp-content/uploads/2023/06/Image20230617095400.png" alt="logo" />
+                    </div>
+                    <div style="text-align: center; margin: 20px 0;">
+                        <h2 style="color: #2c398e; font-weight: bold; border-bottom: 4px solid #F04D17; padding-bottom: 10px; display: inline-block;">
+                            IF IT'S NOT PERSONAL, IT'S NOT POSSIBLE1
+                        </h2>
+                    </div>
+                    <div style="margin: 20px 0;">
+                        <img style="width: 100%; border: 2px solid #F04D17; border-radius: 5px;" src="https://mysummerbodyclub.nl/wp-content/uploads/2025/06/personal-1277392_1280.jpg" alt="banner image" />
+                    </div>
+                    
+                    <!-- Email Content -->
+                    <div style="padding: 20px; background-color: #ffffff; border-radius: 5px;">
+                        <p><strong>Betaling voor huur PT Ruimte is gelukt</strong></p>
+                        <p><strong>Datum:</strong> <em>${formattedDate}</em></p>
+                        <p><strong>Beste ${voornaam},</strong></p>
+                        <p>Welkom bij My Summerbody Club!</p>
+                        <p>We hebben je betaling ontvangen voor PT ruimte huur abonnement.</p>
+                    </div>
+
+                     <!-- PT Form Extra Step Details -->
+                    <div style="margin: 20px 0; padding: 15px; background-color: #f3f3f3; border-radius: 5px; border-left: 5px solid #2c398e;">
+                        <h3 style="color: #2c398e;">Bedrijfgevens</h3>
+                        <p><strong>Bedrijfsnaam:</strong> ${bedrijfsnaam}</p>
+                        <p><strong>KVK Nr:</strong> ${kvknummer}</p>
+                        <p><strong>BTW Nr:</strong> ${BTWnummer}</p>
+                        
+                    </div>
+                    
+                    <!-- Personal Details -->
+                    <div style="margin: 20px 0; padding: 15px; background-color: #f3f3f3; border-radius: 5px; border-left: 5px solid #F04D17;">
+                        <h3 style="color: #F04D17;">Persoonlijke Gegevens</h3>
+                        <p><strong>Voornaam:</strong> ${voornaam}</p>
+                        <p><strong>Tussen Voegsel:</strong> ${tussenvoegsel}</p>
+                        <p><strong>Achternaam:</strong> ${achternaam}</p>
+                        <p><strong>Geslacht:</strong> ${geslachtooptions}</p>
+                        <p><strong>Geboortedatum:</strong> ${dayOfMonth}-${month}-${years}</p>
+                    </div>
+            
+                    <!-- Address Details -->
+                    <div style="margin: 20px 0; padding: 15px; background-color: #f3f3f3; border-radius: 5px; border-left: 5px solid #2c398e;">
+                        <h3 style="color: #2c398e;">Adresgegevens</h3>
+                        <p><strong>Postcode:</strong> ${postcode}</p>
+                        <p><strong>Huisnummer:</strong> ${huisnummer}</p>
+                        <p><strong>Toevoeging:</strong> ${toevoeging}</p>
+                        <p><strong>Adres:</strong> ${adres}</p>
+                        <p><strong>Woonplaats:</strong> ${woonplaats}</p>
+                    </div>
+
+                    <!-- Contact Details -->
+                    <div style="margin: 20px 0; padding: 15px; background-color: #f3f3f3; border-radius: 5px; border-left: 5px solid #F04D17;">
+                        <h3 style="color: #F04D17;">Contactgegevens</h3>
+                        <p><strong>Telefoonnummer:</strong> ${telefoonnummer}</p>
+                        <p><strong>E-mail:</strong> ${email}</p>
+            
+                    </div>
+            
+                    <!-- Order Summary -->
+<div style="margin: 20px 0; padding: 15px; background-color: #ffffff; border-radius: 5px; border: 1px solid #ddd;">
+    <h3 style="color: #F04D17;">Abonnement Informatie</h3>
+    <p>PT ruimte huur € 250,00 | per maand | Excl. btw | <strong>o.b.v. 1 jarig contract</strong></p>
+    <p><strong>Periode:</strong> 28-09-2024 t/m 28-10-2024</p>
+
+    <p><strong>Eenmalige kosten:</strong></p>
+    <p>Toegangspas: € 25,00</p>
+    <p>Borg: € 100,00 (Te betalen bij het ophalen van je toegangspas)</p>
+
+    <p><strong>Subtotaal:</strong></p>
+    <p>Huur per maand: € 250,00</p>
+    <p>Toegangspas: € 25,00</p>
+    <p>21% btw: € 57,75 over € 275,00</p>
+
+    <hr />
+    <p><strong>Te betalen bedrag:</strong> € 332,75</p>
+    <p><strong>Betaald bedrag:</strong> € 332,75</p>
+
+    <p style="margin-top: 10px; font-size: 0.95em;">
+        *Na de eerste betaling wordt er maandelijks een bedrag van <strong>€ 302,50</strong> inclusief btw automatisch afgeschreven van het rekeningnummer dat bij ons geregistreerd staat voor de betaling van de huur.
+    </p>
+
+    <p>Wilt u deze bevestiging gereed houden als u contact met ons opneemt, dan kunnen we u meteen van dienst zijn.</p>
+    <p><strong>Tot ziens,</strong></p>
+    <p>Met sportieve groet,</p>
+    <p>Team - My Summerbody Club</p>
+</div>
+            
+                    <!-- Footer Section -->
+                    <div style="text-align: center; margin: 20px 0;">
+                        <h3 style="color: #2c398e;">Onze Trainingen</h3>
+                        <p>
+                            <a href="https://mysummerbodyclub.nl/trainingprograms/small-group-training/" style="color: #F04D17; text-decoration: none;">Small Group Training</a> |
+                            <a href="https://mysummerbodyclub.nl/trainingprograms/afvallen/" style="color: #F04D17; text-decoration: none;">Afvallen</a> |
+                            <a href="https://mysummerbodyclub.nl/trainingprograms/personal-training/" style="color: #F04D17; text-decoration: none;">Personal Training</a>
+                        </p>
+                        <p>
+                            <a href="https://mysummerbodyclub.nl/" style="color: #2c398e; text-decoration: none; font-weight: bold;">www.mysummerbodyclub.nl</a>
+                        </p>
+                    </div>
+            
+                    <!-- Social Links -->
+                    <div style="text-align: center; margin: 20px 0; padding: 10px; background-color: #F04D17; color: #ffffff; border-radius: 5px;">
+                        <a href="https://web.facebook.com/mysummerbodyclub" style="margin: 0 10px;">
+                            <img src="https://mysummerbodyclub.nl/wp-content/uploads/2023/09/107153_circle_facebook_icon.png" alt="Facebook" style="width: 30px; height: 30px;" />
+                        </a>
+                        <a href="https://www.instagram.com/mysummerbodyclub/" style="margin: 0 10px;">
+                            <img src="https://mysummerbodyclub.nl/wp-content/uploads/2023/09/5279112_camera_instagram_social-media_instagram-logo_icon.png" alt="Instagram" style="width: 30px; height: 30px;" />
+                        </a>
+                        <a href="https://www.youtube.com/@mysummerbodyclub" style="margin: 0 10px;">
+                            <img src="https://mysummerbodyclub.nl/wp-content/uploads/2023/09/5305164_play_video_youtube_youtube-logo_icon.png" alt="YouTube" style="width: 30px; height: 30px;" />
+                        </a>
+                    </div>
+            
+                    <p style="text-align: center; font-size: 14px; color: #666;">KVK 59250097 | Btw: NL003699102B10 | Contact: T +(0) 627 28 28 56 | E: info@mysummerbody.nl</p>
+                </div>
+                    `, // Plain text content
+    };
+
+    // Send the email
+    try {
+        const info = await transporter.sendMail(mailOptions);
+        console.log('Email sent successfully:', info.response);
+    } catch (error) {
+        console.error('Error sending email:', error);
+    }
+};
+
+module.exports = sendPTEmail;
