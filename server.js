@@ -190,6 +190,9 @@ app.use('/api', updateUserInfo);
 const dashboardStats = require('./routes/dashboardStats.js');
 app.use('/api', dashboardStats);
 
+const memberPortal = require('./routes/memberPortal.js');
+app.use('/api', memberPortal);
+
 // Customers Feedback
 app.use('/api', customersFeedbackRoutes);
 

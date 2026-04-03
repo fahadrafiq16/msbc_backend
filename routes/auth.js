@@ -51,31 +51,47 @@ router.post("/login", async (req, res) => {
             return res.status(400).json({ success: false, error: "Username and password are required" });
         }
 
+        // --- Try admin login first ---
         const settings = await ensureAdminSettings();
 
-        if (settings.username !== username.trim()) {
-            return res.status(401).json({ success: false, error: "Invalid credentials" });
+        if (settings.username === username.trim()) {
+            const isMatch = await bcrypt.compare(password, settings.passwordHash);
+            if (isMatch) {
+                const token = jwt.sign(
+                    { id: settings._id, username: settings.username, role: "admin" },
+                    process.env.JWT_SECRET,
+                    { expiresIn: process.env.JWT_EXPIRY || "12h" }
+                );
+                return res.json({ success: true, token, user: { ...sanitizeSettings(settings), role: "admin" } });
+            }
         }
 
-        const isMatch = await bcrypt.compare(password, settings.passwordHash);
-        if (!isMatch) {
-            return res.status(401).json({ success: false, error: "Invalid credentials" });
+        // --- Try member login (voornaam = username) ---
+        const UserInfo = require("../models/UserInfo");
+        const member = await UserInfo.findOne({ voornaam: username.trim() }).sort({ createdAt: -1 });
+
+        if (member && member.memberPassword) {
+            const memberMatch = await bcrypt.compare(password, member.memberPassword);
+            if (memberMatch) {
+                const token = jwt.sign(
+                    { id: String(member._id), voornaam: member.voornaam, email: member.email, role: "member" },
+                    process.env.JWT_SECRET,
+                    { expiresIn: process.env.JWT_EXPIRY || "12h" }
+                );
+                return res.json({
+                    success: true,
+                    token,
+                    user: {
+                        role: "member",
+                        memberId: String(member._id),
+                        voornaam: member.voornaam,
+                        email: member.email,
+                    },
+                });
+            }
         }
 
-        const token = jwt.sign(
-            {
-                id: settings._id,
-                username: settings.username,
-            },
-            process.env.JWT_SECRET,
-            { expiresIn: process.env.JWT_EXPIRY || "12h" }
-        );
-
-        res.json({
-            success: true,
-            token,
-            user: sanitizeSettings(settings),
-        });
+        return res.status(401).json({ success: false, error: "Invalid credentials" });
     } catch (err) {
         console.error("Login failed:", err);
         res.status(500).json({ success: false, error: err.message });

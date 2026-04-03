@@ -45,6 +45,8 @@ const userInfoSchema = new mongoose.Schema({
   blocked: { type: Boolean, default: false },
   manualPaymentStatus: { type: String, default: "" },
 
+  memberPassword: { type: String, default: "" },
+
 }, { timestamps: true });
 
 module.exports = mongoose.model("UserInfo", userInfoSchema);
