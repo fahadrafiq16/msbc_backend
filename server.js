@@ -35,6 +35,7 @@ const deletePaymentById = require('./routes/deletePaymentById.js');
 
 const customersFeedbackRoutes = require('./routes/customersFeedback.js');
 const authRoutes = require('./routes/auth.js');
+const dbHealthRoutes = require('./routes/dbHealth.js');
 const trainingConfigRoutes = require('./routes/trainingConfig.js');
 const { ensureAdminSettings } = require('./utils/adminSettings');
 const authenticateToken = require('./middleware/authMiddleware');
@@ -83,6 +84,9 @@ app.use('/api', chargingRecurringPayment);
 
 // Auth routes
 app.use('/api/auth', authRoutes);
+
+// MongoDB health check (public)
+app.use('/api', dbHealthRoutes);
 
 // Example route
 app.get('/', (req, res) => {
@@ -192,6 +196,9 @@ app.use('/api', dashboardStats);
 
 const memberPortal = require('./routes/memberPortal.js');
 app.use('/api', memberPortal);
+
+const programConfig = require('./routes/programConfig.js');
+app.use('/api', programConfig);
 
 // Customers Feedback
 app.use('/api', customersFeedbackRoutes);
