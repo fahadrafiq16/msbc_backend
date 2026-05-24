@@ -11,7 +11,7 @@ router.get("/test-feedback", (req, res) => {
 // POST - Create a new customer feedback
 router.post("/customers-feedback", async (req, res) => {
     try {
-        const { name, position, rating, testimonial, isFeatured, displayOrder } = req.body;
+        const { name, position, rating, testimonial, isFeatured, displayOrder, trainingType, imageUrl, imagePublicId } = req.body;
 
         // Validation
         if (!name || !name.trim()) {
@@ -35,7 +35,10 @@ router.post("/customers-feedback", async (req, res) => {
             isFeatured: Boolean(isFeatured),
             displayOrder: Number.isFinite(displayOrder) ? displayOrder : Number(displayOrder) || 0,
             rating: ratingNum,
-            testimonial: testimonial.trim()
+            testimonial: testimonial.trim(),
+            trainingType: typeof trainingType === "string" ? trainingType.trim() : "",
+            imageUrl: typeof imageUrl === "string" ? imageUrl.trim() : "",
+            imagePublicId: typeof imagePublicId === "string" ? imagePublicId.trim() : ""
         });
 
         res.json({ 
@@ -59,7 +62,7 @@ router.get("/fetch-customers-feedback", async (req, res) => {
         }
 
         const findQuery = CustomersFeedBack.find(query)
-            .select('name position rating testimonial isFeatured displayOrder createdAt updatedAt')
+            .select('name position rating testimonial isFeatured displayOrder trainingType imageUrl createdAt updatedAt')
             .sort(featured === "true" ? { displayOrder: 1, createdAt: -1 } : { createdAt: -1 })
             .lean();
 

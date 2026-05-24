@@ -30,6 +30,19 @@ const customersFeedbackSchema = new mongoose.Schema({
         type: String,
         required: true,
         trim: true
+    },
+    trainingType: {
+        type: String,
+        trim: true,
+        default: ""
+    },
+    imageUrl: {
+        type: String,
+        default: ""
+    },
+    imagePublicId: {
+        type: String,
+        default: ""
     }
 }, { 
     timestamps: true 

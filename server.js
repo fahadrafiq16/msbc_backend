@@ -200,6 +200,9 @@ app.use('/api', memberPortal);
 const programConfig = require('./routes/programConfig.js');
 app.use('/api', programConfig);
 
+const uploadImage = require('./routes/uploadImage.js');
+app.use('/api', uploadImage);
+
 // Customers Feedback
 app.use('/api', customersFeedbackRoutes);
 
