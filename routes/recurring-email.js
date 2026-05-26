@@ -107,7 +107,7 @@ router.post('/recurring-email', async (req, res) => {
                         <h3 style="color: #F04D17;">Abonnement Informatie</h3>
                         <p><strong>Abonnement type:</strong> ${subTitle}</p>
                         <p>€ ${selectedOptionAmount} - ${selectedOptionTitle}</p>
-                        <p><strong>Extra:</strong>€ ${extraOptionAmount}0,00 - ${extraOptionTitle}</p>
+                        <p><strong>Extra:</strong>€ ${extraOptionAmount} - ${extraOptionTitle}</p>
                         <p><strong>Éénmalige kosten:</strong> </p>
                         <p><strong>Inschrijfgeld:</strong> - € 24,99</p>
                         <p><strong>Clubpas/ QR-code </strong>€ ${clubAmount},00.</p>
