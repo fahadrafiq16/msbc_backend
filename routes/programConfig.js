@@ -603,6 +603,8 @@ function toPayload(doc) {
     extraOptions: doc?.extraOptions || [],
     clubAmount: doc?.clubAmount || [],
     trainingDescription: doc?.afvallenTrainingDescription || [],
+    featuredImageUrl: doc?.featuredImageUrl || "",
+    featuredImagePublicId: doc?.featuredImagePublicId || "",
   };
 }
 
@@ -645,7 +647,7 @@ router.put("/program-config/:key", authenticateToken, async (req, res) => {
       return res.status(404).json({ success: false, error: `Unknown program key: ${key}` });
     }
 
-    const { paymentOptions, extraOptions, clubAmount, trainingDescription } = req.body || {};
+    const { paymentOptions, extraOptions, clubAmount, trainingDescription, featuredImageUrl, featuredImagePublicId } = req.body || {};
 
     if (
       !Array.isArray(paymentOptions) ||
@@ -659,15 +661,25 @@ router.put("/program-config/:key", authenticateToken, async (req, res) => {
       });
     }
 
+    const update = {
+      key,
+      paymentOptions,
+      extraOptions,
+      clubAmount,
+      afvallenTrainingDescription: trainingDescription,
+    };
+
+    if (typeof featuredImageUrl === "string") {
+      update.featuredImageUrl = featuredImageUrl.trim();
+    }
+
+    if (typeof featuredImagePublicId === "string") {
+      update.featuredImagePublicId = featuredImagePublicId.trim();
+    }
+
     const updated = await TrainingConfig.findOneAndUpdate(
       { key },
-      {
-        key,
-        paymentOptions,
-        extraOptions,
-        clubAmount,
-        afvallenTrainingDescription: trainingDescription,
-      },
+      update,
       { new: true, upsert: true, setDefaultsOnInsert: true, runValidators: true, lean: true }
     );
 

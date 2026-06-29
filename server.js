@@ -34,6 +34,8 @@ const getPaymentById = require('./routes/getPaymentById.js');
 const deletePaymentById = require('./routes/deletePaymentById.js');
 
 const customersFeedbackRoutes = require('./routes/customersFeedback.js');
+const homeSliderRoutes = require('./routes/homeSlider.js');
+const homeSectionsRoutes = require('./routes/homeSections.js');
 const authRoutes = require('./routes/auth.js');
 const dbHealthRoutes = require('./routes/dbHealth.js');
 const trainingConfigRoutes = require('./routes/trainingConfig.js');
@@ -205,6 +207,12 @@ app.use('/api', uploadImage);
 
 // Customers Feedback
 app.use('/api', customersFeedbackRoutes);
+
+// Home page slider
+app.use('/api', homeSliderRoutes);
+
+// Home page sections (lifestyle video, etc.)
+app.use('/api', homeSectionsRoutes);
 
 // Training config (AfvallenTraining data)
 app.use('/api', trainingConfigRoutes);

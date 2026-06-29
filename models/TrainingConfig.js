@@ -7,6 +7,8 @@ const trainingConfigSchema = new mongoose.Schema(
     extraOptions: { type: Array, default: [] },
     clubAmount: { type: Array, default: [] },
     afvallenTrainingDescription: { type: Array, default: [] },
+    featuredImageUrl: { type: String, default: "" },
+    featuredImagePublicId: { type: String, default: "" },
   },
   { timestamps: true }
 );
