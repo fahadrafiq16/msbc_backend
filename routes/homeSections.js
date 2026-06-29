@@ -8,6 +8,8 @@ const LIFESTYLE_SECTION_KEY = "lifestyle-video";
 const POPUP_VIDEO_SECTION_KEY = "popup-video-area";
 const GALLERY_SECTION_KEY = "gallery";
 const FOOTER_SECTION_KEY = "footer";
+const BOOTCAMP_PAGE_SECTION_KEY = "bootcamp-page";
+const PT_RENT_PAGE_SECTION_KEY = "pt-rent-page";
 const DEFAULT_YOUTUBE_EMBED = "https://www.youtube.com/embed/3A8X8O4dT5E";
 const DEFAULT_LIFESTYLE_EMBED = DEFAULT_YOUTUBE_EMBED;
 const DEFAULT_GALLERY_BUTTON_URL = "https://mysummerbodyclub.nl/fotos/";
@@ -164,6 +166,26 @@ router.get("/fetch-home-section/:sectionKey", async (req, res) => {
                 footerLegalText: "Algemene voorwaarden | Privacybeleid | KVK 59250097 | Btw: NL003699102B10",
                 facebookPageUrl: "https://www.facebook.com/mysummerbodyclub",
                 socialLinks: DEFAULT_SOCIAL_LINKS,
+                isActive: true,
+            };
+        }
+
+        if (!section && sectionKey === BOOTCAMP_PAGE_SECTION_KEY) {
+            section = {
+                sectionKey: BOOTCAMP_PAGE_SECTION_KEY,
+                title: "Bootcamp",
+                bannerImageUrl: "",
+                bannerImagePublicId: "",
+                isActive: true,
+            };
+        }
+
+        if (!section && sectionKey === PT_RENT_PAGE_SECTION_KEY) {
+            section = {
+                sectionKey: PT_RENT_PAGE_SECTION_KEY,
+                title: "PT Ruimte Huren",
+                bannerImageUrl: "",
+                bannerImagePublicId: "",
                 isActive: true,
             };
         }
