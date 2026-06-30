@@ -205,6 +205,9 @@ app.use('/api', programConfig);
 const uploadImage = require('./routes/uploadImage.js');
 app.use('/api', uploadImage);
 
+const fotosGalleriesRoutes = require('./routes/fotosGalleries.js');
+app.use('/api', fotosGalleriesRoutes);
+
 // Customers Feedback
 app.use('/api', customersFeedbackRoutes);
 
