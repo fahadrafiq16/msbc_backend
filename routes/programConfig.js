@@ -605,6 +605,12 @@ function toPayload(doc) {
     trainingDescription: doc?.afvallenTrainingDescription || [],
     featuredImageUrl: doc?.featuredImageUrl || "",
     featuredImagePublicId: doc?.featuredImagePublicId || "",
+    introImage1Url: doc?.introImage1Url || "",
+    introImage1PublicId: doc?.introImage1PublicId || "",
+    introImage2Url: doc?.introImage2Url || "",
+    introImage2PublicId: doc?.introImage2PublicId || "",
+    introVideoUrl: doc?.introVideoUrl || "",
+    introVideoPublicId: doc?.introVideoPublicId || "",
   };
 }
 
@@ -647,7 +653,7 @@ router.put("/program-config/:key", authenticateToken, async (req, res) => {
       return res.status(404).json({ success: false, error: `Unknown program key: ${key}` });
     }
 
-    const { paymentOptions, extraOptions, clubAmount, trainingDescription, featuredImageUrl, featuredImagePublicId } = req.body || {};
+    const { paymentOptions, extraOptions, clubAmount, trainingDescription, featuredImageUrl, featuredImagePublicId, introImage1Url, introImage1PublicId, introImage2Url, introImage2PublicId, introVideoUrl, introVideoPublicId } = req.body || {};
 
     if (
       !Array.isArray(paymentOptions) ||
@@ -675,6 +681,30 @@ router.put("/program-config/:key", authenticateToken, async (req, res) => {
 
     if (typeof featuredImagePublicId === "string") {
       update.featuredImagePublicId = featuredImagePublicId.trim();
+    }
+
+    if (typeof introImage1Url === "string") {
+      update.introImage1Url = introImage1Url.trim();
+    }
+
+    if (typeof introImage1PublicId === "string") {
+      update.introImage1PublicId = introImage1PublicId.trim();
+    }
+
+    if (typeof introImage2Url === "string") {
+      update.introImage2Url = introImage2Url.trim();
+    }
+
+    if (typeof introImage2PublicId === "string") {
+      update.introImage2PublicId = introImage2PublicId.trim();
+    }
+
+    if (typeof introVideoUrl === "string") {
+      update.introVideoUrl = introVideoUrl.trim();
+    }
+
+    if (typeof introVideoPublicId === "string") {
+      update.introVideoPublicId = introVideoPublicId.trim();
     }
 
     const updated = await TrainingConfig.findOneAndUpdate(

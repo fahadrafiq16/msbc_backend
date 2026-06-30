@@ -9,6 +9,12 @@ const trainingConfigSchema = new mongoose.Schema(
     afvallenTrainingDescription: { type: Array, default: [] },
     featuredImageUrl: { type: String, default: "" },
     featuredImagePublicId: { type: String, default: "" },
+    introImage1Url: { type: String, default: "" },
+    introImage1PublicId: { type: String, default: "" },
+    introImage2Url: { type: String, default: "" },
+    introImage2PublicId: { type: String, default: "" },
+    introVideoUrl: { type: String, default: "" },
+    introVideoPublicId: { type: String, default: "" },
   },
   { timestamps: true }
 );

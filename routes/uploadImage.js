@@ -56,4 +56,47 @@ router.post("/upload-image", upload.single("image"), async (req, res) => {
     }
 });
 
+const videoUpload = multer({
+    storage: multer.memoryStorage(),
+    limits: { fileSize: 50 * 1024 * 1024 },
+    fileFilter: (_req, file, cb) => {
+        if (!file.mimetype?.startsWith("video/")) {
+            return cb(new Error("Only video files are allowed"));
+        }
+        cb(null, true);
+    },
+});
+
+const streamUploadVideo = (buffer, folder) =>
+    new Promise((resolve, reject) => {
+        const stream = cloudinary.uploader.upload_stream(
+            { folder, resource_type: "video" },
+            (err, result) => (err ? reject(err) : resolve(result))
+        );
+        stream.end(buffer);
+    });
+
+// POST /api/upload-video  (multipart/form-data, field "video")
+router.post("/upload-video", videoUpload.single("video"), async (req, res) => {
+    try {
+        if (!process.env.CLOUDINARY_CLOUD_NAME) {
+            return res.status(500).json({ success: false, error: "Cloudinary is not configured (missing CLOUDINARY_CLOUD_NAME)" });
+        }
+        if (!req.file) {
+            return res.status(400).json({ success: false, error: "No video uploaded (use field name 'video')" });
+        }
+        const folder = String(req.query.folder || req.body.folder || "msbc/intro-videos");
+        const result = await streamUploadVideo(req.file.buffer, folder);
+        return res.json({
+            success: true,
+            url: result.secure_url,
+            publicId: result.public_id,
+            format: result.format,
+        });
+    } catch (err) {
+        console.error("[upload-video] failed:", err);
+        return res.status(500).json({ success: false, error: err.message || "Upload failed" });
+    }
+});
+
 module.exports = router;

@@ -10,6 +10,8 @@ const GALLERY_SECTION_KEY = "gallery";
 const FOOTER_SECTION_KEY = "footer";
 const BOOTCAMP_PAGE_SECTION_KEY = "bootcamp-page";
 const PT_RENT_PAGE_SECTION_KEY = "pt-rent-page";
+const CLUB_SUBSCRIPTIONS_SECTION_KEY = "club-subscriptions";
+const OVER_MSBC_SECTION_KEY = "over-msbc";
 const DEFAULT_YOUTUBE_EMBED = "https://www.youtube.com/embed/3A8X8O4dT5E";
 const DEFAULT_LIFESTYLE_EMBED = DEFAULT_YOUTUBE_EMBED;
 const DEFAULT_GALLERY_BUTTON_URL = "https://mysummerbodyclub.nl/fotos/";
@@ -186,6 +188,23 @@ router.get("/fetch-home-section/:sectionKey", async (req, res) => {
                 title: "PT Ruimte Huren",
                 bannerImageUrl: "",
                 bannerImagePublicId: "",
+                isActive: true,
+            };
+        }
+
+        if (!section && sectionKey === CLUB_SUBSCRIPTIONS_SECTION_KEY) {
+            section = {
+                sectionKey: CLUB_SUBSCRIPTIONS_SECTION_KEY,
+                title: "Club Abonnementen",
+                isActive: true,
+            };
+        }
+
+        if (!section && sectionKey === OVER_MSBC_SECTION_KEY) {
+            section = {
+                sectionKey: OVER_MSBC_SECTION_KEY,
+                title: "Over MSBC",
+                galleryItems: [],
                 isActive: true,
             };
         }
