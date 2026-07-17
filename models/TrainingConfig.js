@@ -15,6 +15,8 @@ const trainingConfigSchema = new mongoose.Schema(
     introImage2PublicId: { type: String, default: "" },
     introVideoUrl: { type: String, default: "" },
     introVideoPublicId: { type: String, default: "" },
+    introQuote: { type: String, default: "" },
+    introDescription: { type: String, default: "" },
   },
   { timestamps: true }
 );

@@ -611,6 +611,8 @@ function toPayload(doc) {
     introImage2PublicId: doc?.introImage2PublicId || "",
     introVideoUrl: doc?.introVideoUrl || "",
     introVideoPublicId: doc?.introVideoPublicId || "",
+    introQuote: doc?.introQuote || "",
+    introDescription: doc?.introDescription || "",
   };
 }
 
@@ -653,7 +655,7 @@ router.put("/program-config/:key", authenticateToken, async (req, res) => {
       return res.status(404).json({ success: false, error: `Unknown program key: ${key}` });
     }
 
-    const { paymentOptions, extraOptions, clubAmount, trainingDescription, featuredImageUrl, featuredImagePublicId, introImage1Url, introImage1PublicId, introImage2Url, introImage2PublicId, introVideoUrl, introVideoPublicId } = req.body || {};
+    const { paymentOptions, extraOptions, clubAmount, trainingDescription, featuredImageUrl, featuredImagePublicId, introImage1Url, introImage1PublicId, introImage2Url, introImage2PublicId, introVideoUrl, introVideoPublicId, introQuote, introDescription } = req.body || {};
 
     if (
       !Array.isArray(paymentOptions) ||
@@ -705,6 +707,14 @@ router.put("/program-config/:key", authenticateToken, async (req, res) => {
 
     if (typeof introVideoPublicId === "string") {
       update.introVideoPublicId = introVideoPublicId.trim();
+    }
+
+    if (typeof introQuote === "string") {
+      update.introQuote = introQuote.trim();
+    }
+
+    if (typeof introDescription === "string") {
+      update.introDescription = introDescription.trim();
     }
 
     const updated = await TrainingConfig.findOneAndUpdate(

@@ -12,6 +12,14 @@ const BOOTCAMP_PAGE_SECTION_KEY = "bootcamp-page";
 const PT_RENT_PAGE_SECTION_KEY = "pt-rent-page";
 const CLUB_SUBSCRIPTIONS_SECTION_KEY = "club-subscriptions";
 const OVER_MSBC_SECTION_KEY = "over-msbc";
+const ABONNEMENT_PAGE_SECTION_KEY = "abonnement-page";
+const DEFAULT_ABONNEMENT_TITLE = "Maak Je Lichaam Sterker, Blijf *Fit* en *Gezond*";
+const DEFAULT_ABONNEMENT_BODY =
+    "We bieden een breed scala aan diensten aan om je fitnesservaring effectiever, flexibeler en creatiever te maken. Onze gekwalificeerde trainers zijn niet alleen goed uitgerust met kennis over fitness, gewichtsverlies, wedstrijdtrainingen en kickboksen, maar hebben zelf op hoog niveau deelgenomen aan wedstrijden in hun vakgebied. Door onze kennis kunnen wij trainingsprogramma’s aanbieden die allemaal zijn afgestemd op het doel en de wensen van de klant. Hieronder staan enkele diensten die wij aanbieden.";
+const DEFAULT_ABONNEMENT_BUTTON_LABEL = "Start Je Training Vandaag!";
+const DEFAULT_ABONNEMENT_BUTTON_URL = "/proefles";
+const DEFAULT_ABONNEMENT_IMAGE =
+    "https://mysummerbodyclub.nl/wp-content/themes/my-summer-body-club/assets/Sterk_Fit_Gezond_-MSBC.jpg";
 const DEFAULT_YOUTUBE_EMBED = "https://www.youtube.com/embed/3A8X8O4dT5E";
 const DEFAULT_LIFESTYLE_EMBED = DEFAULT_YOUTUBE_EMBED;
 const DEFAULT_GALLERY_BUTTON_URL = "https://mysummerbodyclub.nl/fotos/";
@@ -33,6 +41,10 @@ const DEFAULT_FOOTER_COLUMN1_LINKS = [
 const DEFAULT_FOOTER_COLUMN4_LINKS = [
     { title: "Algemene voorwaarden", url: "/algemene-voorwaarden/", displayOrder: 0 },
     { title: "Privacyverklaring", url: "/privacyverklaring/", displayOrder: 1 },
+    { title: "Huisregels", url: "/", displayOrder: 2 },
+    { title: "Cookies", url: "/", displayOrder: 3 },
+    { title: "Herroepings-Recht", url: "/", displayOrder: 4 },
+    { title: "SEPA", url: "/", displayOrder: 5 },
 ];
 
 const DEFAULT_SOCIAL_LINKS = [
@@ -209,6 +221,19 @@ router.get("/fetch-home-section/:sectionKey", async (req, res) => {
             };
         }
 
+        if (!section && sectionKey === ABONNEMENT_PAGE_SECTION_KEY) {
+            section = {
+                sectionKey: ABONNEMENT_PAGE_SECTION_KEY,
+                title: DEFAULT_ABONNEMENT_TITLE,
+                bodyText: DEFAULT_ABONNEMENT_BODY,
+                buttonLabel: DEFAULT_ABONNEMENT_BUTTON_LABEL,
+                buttonUrl: DEFAULT_ABONNEMENT_BUTTON_URL,
+                bannerImageUrl: DEFAULT_ABONNEMENT_IMAGE,
+                bannerImagePublicId: "",
+                isActive: true,
+            };
+        }
+
         if (!section) {
             return res.status(404).json({ success: false, error: "Section not found" });
         }
@@ -223,7 +248,7 @@ router.get("/fetch-home-section/:sectionKey", async (req, res) => {
 router.put("/home-sections/:sectionKey", authenticateToken, async (req, res) => {
     try {
         const { sectionKey } = req.params;
-        const { title, youtubeEmbedUrl, bannerImageUrl, bannerImagePublicId, leftImageUrl, leftImagePublicId, rightImageUrl, rightImagePublicId, photosButtonUrl, videosButtonUrl, galleryItems, footerColumn1Title, footerColumn1Links, footerColumn4Title, footerColumn4Links, footerLogoImageUrl, footerLogoImagePublicId, footerLegalText, facebookPageUrl, socialLinks, isActive } = req.body;
+        const { title, bodyText, buttonLabel, buttonUrl, youtubeEmbedUrl, bannerImageUrl, bannerImagePublicId, leftImageUrl, leftImagePublicId, rightImageUrl, rightImagePublicId, photosButtonUrl, videosButtonUrl, galleryItems, footerColumn1Title, footerColumn1Links, footerColumn4Title, footerColumn4Links, footerLogoImageUrl, footerLogoImagePublicId, footerLegalText, facebookPageUrl, socialLinks, isActive } = req.body;
 
         if (!sectionKey) {
             return res.status(400).json({ success: false, error: "sectionKey is required" });
@@ -233,6 +258,18 @@ router.put("/home-sections/:sectionKey", authenticateToken, async (req, res) => 
 
         if (typeof title === "string") {
             updates.title = title.trim();
+        }
+
+        if (typeof bodyText === "string") {
+            updates.bodyText = bodyText.trim();
+        }
+
+        if (typeof buttonLabel === "string") {
+            updates.buttonLabel = buttonLabel.trim();
+        }
+
+        if (typeof buttonUrl === "string") {
+            updates.buttonUrl = buttonUrl.trim();
         }
 
         if (typeof youtubeEmbedUrl === "string") {

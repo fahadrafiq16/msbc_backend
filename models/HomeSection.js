@@ -40,6 +40,21 @@ const homeSectionSchema = new mongoose.Schema(
             default: "",
             trim: true,
         },
+        bodyText: {
+            type: String,
+            default: "",
+            trim: true,
+        },
+        buttonLabel: {
+            type: String,
+            default: "",
+            trim: true,
+        },
+        buttonUrl: {
+            type: String,
+            default: "",
+            trim: true,
+        },
         youtubeEmbedUrl: {
             type: String,
             default: "",
