@@ -11,6 +11,7 @@ const userInfoSchema = new mongoose.Schema({
   voornaam: { type: String, default: ""},
   tussenvoegsel: { type: String, default: "" },
   achternaam: { type: String, default: "" },
+  geslachtooptions: { type: String, default: "" },
   
   dayOfMonth: { type: String, default: "" },
   month: { type: String, default: "" },
