@@ -13,6 +13,58 @@ const PT_RENT_PAGE_SECTION_KEY = "pt-rent-page";
 const CLUB_SUBSCRIPTIONS_SECTION_KEY = "club-subscriptions";
 const OVER_MSBC_SECTION_KEY = "over-msbc";
 const ABONNEMENT_PAGE_SECTION_KEY = "abonnement-page";
+const INFORMATIE_PAGE_SECTION_KEY = "informatie-page";
+const PROEFLES_PAGE_SECTION_KEY = "proefles-page";
+const WEBSITE_HOME_ORDER_SECTION_KEY = "website-home-order";
+const DEFAULT_INFORMATIE_TITLE = "Ik wil graag meer informatie over:";
+const DEFAULT_INFORMATIE_BODY =
+    "Je ontvangt de informatie over de door jouw aangevraagde training zo snel mogelijk! Vul eerst nog even je gegevens in.";
+const DEFAULT_INFORMATIE_GEGEVENS_HEADING = "Mijn gegevens";
+const DEFAULT_INFORMATIE_PERSONAL_HEADING = "Persoonlijke gegevens";
+const DEFAULT_INFORMATIE_CONTACT_HEADING = "Contactgegevens";
+const DEFAULT_INFORMATIE_TRAINING_OPTIONS = [
+    { title: "Small Group Training", url: "small-group-training", displayOrder: 0 },
+    { title: "Personal Training", url: "personal-training", displayOrder: 1 },
+    { title: "Duo PT", url: "duo-pt", displayOrder: 2 },
+    { title: "Wedstrijd Training", url: "wedstrijd-training", displayOrder: 3 },
+    { title: "Afvallen", url: "afvallen", displayOrder: 4 },
+];
+const DEFAULT_PROEFLES_TITLE = "Ik wil een afspraak maken voor proefles:";
+const DEFAULT_PROEFLES_DAY_TIME_HEADING = "Kies dag & tijd";
+const DEFAULT_PROEFLES_DAY_LABEL = "Proefles dag";
+const DEFAULT_PROEFLES_TIME_LABEL = "Verzoektijd";
+const DEFAULT_PROEFLES_GEGEVENS_HEADING = "Mijn gegevens";
+const DEFAULT_PROEFLES_INTRO =
+    "Je ontvang de informatie over de door jouw aangevraade trainen zo snel mogelijk!";
+const DEFAULT_PROEFLES_PERSONAL_HEADING = "Persoonlijke gegevens";
+const DEFAULT_PROEFLES_CONTACT_HEADING = "Contactgegevens";
+const DEFAULT_PROEFLES_BODY = JSON.stringify({
+    noticeText: "Let op! Je krijgt een bevestiging of de door jouw gekozen tijdstip vrij is voor een proefles.",
+    confirmText: "Je bevestiging ontvang je op dit e-mailadres",
+});
+const DEFAULT_PROEFLES_TRAINING_OPTIONS = [
+    { title: "Small Group Training (Gratis)", url: "small-group-training", displayOrder: 0 },
+    { title: "Personal Training (Betaald) *", url: "personal-training", displayOrder: 1 },
+    { title: "Duo PT (Betaald) *", url: "duo-pt", displayOrder: 2 },
+    { title: "Wedstrijd Training (Betaald) *", url: "wedstrijd-training", displayOrder: 3 },
+    { title: "Afvallen (Betaald) *", url: "afvallen", displayOrder: 4 },
+];
+const DEFAULT_PROEFLES_DAY_OPTIONS = [
+    { title: "Ma", url: "ma", displayOrder: 0 },
+    { title: "Di", url: "di", displayOrder: 1 },
+    { title: "Wo", url: "wo", displayOrder: 2 },
+    { title: "Do", url: "do", displayOrder: 3 },
+    { title: "Vr", url: "vr", displayOrder: 4 },
+    { title: "Za", url: "za", displayOrder: 5 },
+];
+const DEFAULT_PROEFLES_TIME_OPTIONS = [
+    { imageUrl: "07:30-08:30", imagePublicId: "", linkUrl: "07-30-08-30", displayOrder: 0 },
+    { imageUrl: "08:30-09:30", imagePublicId: "", linkUrl: "08-30-09-30", displayOrder: 1 },
+    { imageUrl: "09:30-10:30", imagePublicId: "", linkUrl: "09-30-10-30", displayOrder: 2 },
+    { imageUrl: "10:30-11:30", imagePublicId: "", linkUrl: "10-30-11-30", displayOrder: 3 },
+    { imageUrl: "16:00-17:00", imagePublicId: "", linkUrl: "16-00-17-00", displayOrder: 4 },
+    { imageUrl: "18:00-19:00", imagePublicId: "", linkUrl: "18-00-19-00", displayOrder: 5 },
+];
 const DEFAULT_ABONNEMENT_TITLE = "Maak Je Lichaam Sterker, Blijf *Fit* en *Gezond*";
 const DEFAULT_ABONNEMENT_BODY =
     "We bieden een breed scala aan diensten aan om je fitnesservaring effectiever, flexibeler en creatiever te maken. Onze gekwalificeerde trainers zijn niet alleen goed uitgerust met kennis over fitness, gewichtsverlies, wedstrijdtrainingen en kickboksen, maar hebben zelf op hoog niveau deelgenomen aan wedstrijden in hun vakgebied. Door onze kennis kunnen wij trainingsprogramma’s aanbieden die allemaal zijn afgestemd op het doel en de wensen van de klant. Hieronder staan enkele diensten die wij aanbieden.";
@@ -208,6 +260,47 @@ router.get("/fetch-home-section/:sectionKey", async (req, res) => {
             section = {
                 sectionKey: CLUB_SUBSCRIPTIONS_SECTION_KEY,
                 title: "Club Abonnementen",
+                isActive: true,
+            };
+        }
+
+        if (!section && sectionKey === INFORMATIE_PAGE_SECTION_KEY) {
+            section = {
+                sectionKey: INFORMATIE_PAGE_SECTION_KEY,
+                title: DEFAULT_INFORMATIE_TITLE,
+                bodyText: DEFAULT_INFORMATIE_BODY,
+                buttonLabel: DEFAULT_INFORMATIE_GEGEVENS_HEADING,
+                footerColumn1Title: DEFAULT_INFORMATIE_PERSONAL_HEADING,
+                footerColumn4Title: DEFAULT_INFORMATIE_CONTACT_HEADING,
+                footerColumn1Links: DEFAULT_INFORMATIE_TRAINING_OPTIONS,
+                isActive: true,
+            };
+        }
+
+        if (!section && sectionKey === PROEFLES_PAGE_SECTION_KEY) {
+            section = {
+                sectionKey: PROEFLES_PAGE_SECTION_KEY,
+                title: DEFAULT_PROEFLES_TITLE,
+                bodyText: DEFAULT_PROEFLES_BODY,
+                buttonLabel: DEFAULT_PROEFLES_DAY_TIME_HEADING,
+                photosButtonUrl: DEFAULT_PROEFLES_DAY_LABEL,
+                videosButtonUrl: DEFAULT_PROEFLES_TIME_LABEL,
+                footerColumn1Title: DEFAULT_PROEFLES_GEGEVENS_HEADING,
+                footerLegalText: DEFAULT_PROEFLES_INTRO,
+                footerColumn4Title: DEFAULT_PROEFLES_PERSONAL_HEADING,
+                buttonUrl: DEFAULT_PROEFLES_CONTACT_HEADING,
+                footerColumn1Links: DEFAULT_PROEFLES_TRAINING_OPTIONS,
+                footerColumn4Links: DEFAULT_PROEFLES_DAY_OPTIONS,
+                galleryItems: DEFAULT_PROEFLES_TIME_OPTIONS,
+                isActive: true,
+            };
+        }
+
+        if (!section && sectionKey === WEBSITE_HOME_ORDER_SECTION_KEY) {
+            section = {
+                sectionKey: WEBSITE_HOME_ORDER_SECTION_KEY,
+                title: "Website Home Section Order",
+                bodyText: "",
                 isActive: true,
             };
         }
