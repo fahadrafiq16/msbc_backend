@@ -39,6 +39,7 @@ const homeSectionsRoutes = require('./routes/homeSections.js');
 const authRoutes = require('./routes/auth.js');
 const dbHealthRoutes = require('./routes/dbHealth.js');
 const trainingConfigRoutes = require('./routes/trainingConfig.js');
+const foodPlansRoutes = require('./routes/foodPlans.js');
 const { ensureAdminSettings } = require('./utils/adminSettings');
 const authenticateToken = require('./middleware/authMiddleware');
 
@@ -219,6 +220,9 @@ app.use('/api', homeSectionsRoutes);
 
 // Training config (AfvallenTraining data)
 app.use('/api', trainingConfigRoutes);
+
+// Food plans (per member voedingsschema)
+app.use('/api', foodPlansRoutes);
 
 // Club Toggle Switch MongoDB
 
