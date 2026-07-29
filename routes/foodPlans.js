@@ -17,7 +17,7 @@ function defaultSchemaFields() {
     { id: "leeftijd", kind: "field", label: "Leeftijd", value: "", labelEditable: false, inputType: "text" },
     { id: "training", kind: "field", label: "Training", value: "", labelEditable: false, inputType: "text" },
     { id: "aandachtspunt", kind: "field", label: "Aandachtspunt", value: "", labelEditable: false, inputType: "text" },
-    { id: "richtlijn-calorieen", kind: "field", label: "Richtlijn calorieën", value: "", labelEditable: false, inputType: "text" },
+    { id: "richtlijn-calorieen", kind: "heading", label: "Richtlijn calorieën", value: "", labelEditable: false, inputType: "text" },
     { id: "start", kind: "field", label: "Start", value: "", labelEditable: false, inputType: "text" },
     { id: "opbouw", kind: "field", label: "Opbouw", value: "", labelEditable: false, inputType: "text" },
     { id: "afbouw", kind: "field", label: "Afbouw", value: "", labelEditable: false, inputType: "text" },
@@ -100,14 +100,18 @@ function emptyPlan(memberId) {
 function normalizeFields(fields) {
   if (!Array.isArray(fields)) return [];
   return fields
-    .map((f, idx) => ({
-      id: String(f?.id || `field-${idx}-${Date.now()}`),
-      kind: f?.kind === "heading" ? "heading" : "field",
-      label: String(f?.label ?? "").trim(),
-      value: String(f?.value ?? ""),
-      labelEditable: Boolean(f?.labelEditable),
-      inputType: f?.inputType === "textarea" ? "textarea" : "text",
-    }))
+    .map((f, idx) => {
+      const id = String(f?.id || `field-${idx}-${Date.now()}`);
+      const isRichtlijn = id === "richtlijn-calorieen" || String(f?.label || "") === "Richtlijn calorieën";
+      return {
+        id,
+        kind: isRichtlijn ? "heading" : f?.kind === "heading" ? "heading" : "field",
+        label: String(f?.label ?? "").trim(),
+        value: isRichtlijn ? "" : String(f?.value ?? ""),
+        labelEditable: Boolean(f?.labelEditable),
+        inputType: f?.inputType === "textarea" ? "textarea" : "text",
+      };
+    })
     .filter((f) => f.id);
 }
 
