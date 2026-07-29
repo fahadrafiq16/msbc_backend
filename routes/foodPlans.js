@@ -12,11 +12,15 @@ function defaultSchemaFields() {
   return [
     { id: "doel", kind: "field", label: "Doel", value: "", labelEditable: false, inputType: "text" },
     { id: "lengte", kind: "field", label: "Lengte", value: "", labelEditable: false, inputType: "text" },
-    { id: "gewicht", kind: "field", label: "Gewicht", value: "", labelEditable: false, inputType: "text" },
+    { id: "start-gewicht", kind: "field", label: "Start gewicht", value: "", labelEditable: false, inputType: "text" },
+    { id: "eind-gewicht", kind: "field", label: "Eind gewicht", value: "", labelEditable: false, inputType: "text" },
     { id: "leeftijd", kind: "field", label: "Leeftijd", value: "", labelEditable: false, inputType: "text" },
     { id: "training", kind: "field", label: "Training", value: "", labelEditable: false, inputType: "text" },
+    { id: "aandachtspunt", kind: "field", label: "Aandachtspunt", value: "", labelEditable: false, inputType: "text" },
     { id: "richtlijn-calorieen", kind: "field", label: "Richtlijn calorieën", value: "", labelEditable: false, inputType: "text" },
     { id: "start", kind: "field", label: "Start", value: "", labelEditable: false, inputType: "text" },
+    { id: "opbouw", kind: "field", label: "Opbouw", value: "", labelEditable: false, inputType: "text" },
+    { id: "afbouw", kind: "field", label: "Afbouw", value: "", labelEditable: false, inputType: "text" },
     { id: "eiwitten", kind: "field", label: "Eiwitten", value: "", labelEditable: false, inputType: "text" },
   ];
 }
@@ -107,6 +111,28 @@ function normalizeFields(fields) {
     .filter((f) => f.id);
 }
 
+function upgradeSchemaFields(fields) {
+  if (!Array.isArray(fields) || fields.length === 0) return defaultSchemaFields();
+  const ids = new Set(fields.map((f) => f.id));
+  const alreadyNew =
+    ids.has("start-gewicht") || ids.has("eind-gewicht") || ids.has("opbouw") || ids.has("afbouw") || ids.has("aandachtspunt");
+  if (alreadyNew) return fields;
+
+  const OLD_IDS = new Set(["doel", "lengte", "gewicht", "leeftijd", "training", "richtlijn-calorieen", "start", "eiwitten"]);
+  const byId = Object.fromEntries(fields.map((f) => [f.id, f]));
+  const customs = fields.filter((f) => !OLD_IDS.has(f.id));
+
+  return [
+    ...defaultSchemaFields().map((f) => {
+      if (f.id === "start-gewicht") {
+        return { ...f, value: String(byId["gewicht"]?.value || "") };
+      }
+      return { ...f, value: String(byId[f.id]?.value || "") };
+    }),
+    ...customs,
+  ];
+}
+
 function normalizeMealPlan(mealPlan) {
   const src = mealPlan && typeof mealPlan === "object" ? mealPlan : {};
   const week = Number(src.weekPlan);
@@ -168,7 +194,7 @@ function normalizeWeekDay(day) {
 function migrateLegacyPlan(plan) {
   let fields;
   if (Array.isArray(plan.fields) && plan.fields.length > 0) {
-    fields = normalizeFields(plan.fields);
+    fields = upgradeSchemaFields(normalizeFields(plan.fields));
   } else {
     fields = defaultSchemaFields().map((f) => ({
       ...f,
