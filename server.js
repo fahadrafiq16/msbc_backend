@@ -1,5 +1,5 @@
 const express = require('express');
-const { createMollieClient } = require('@mollie/api-client');
+const getMollieClient = require("./utils/mollieClient");
 const cors = require('cors');
 const nodemailer = require('nodemailer');
 require('dotenv').config();
@@ -12,7 +12,6 @@ const path = require("path");
 const BASE_FRONTEND_URL = process.env.BASE_FRONTEND_URL;
 const BASE_BACKEND_URL = process.env.BASE_BACKEND_URL;
 const MONGODB_URI = process.env.MONGODB_URI;
-const mollieClient = createMollieClient({ apiKey: process.env.MOLLIE_API_KEY });
 
 const app = express();
 app.use(express.json());
@@ -110,13 +109,13 @@ app.post('/api/create-recurring-payment', async (req, res) => {
         const { email, name, userInfo } = req.body;
 
         // Step 1: Create a customer
-        const customer = await mollieClient.customers.create({
+        const customer = await getMollieClient().customers.create({
             name,
             email,
         });
 
         // Step 2: Create a mandate (authorization for recurring charges)
-        const payment = await mollieClient.payments.create({
+        const payment = await getMollieClient().payments.create({
             amount: {
                 value: '0.01', // First payment amount (e.g., $1.00 for mandate setup)
                 currency: 'EUR',
@@ -302,7 +301,7 @@ app.post("/api/toggle", authenticateToken, async (req, res) => {
 // });
 
 // Start the server
-app.listen(port, async () => {
+if (require.main === module) app.listen(port, async () => {
     try {
         await ensureAdminSettings();
         console.log("Admin settings ready");
@@ -312,3 +311,5 @@ app.listen(port, async () => {
     console.log(`Server is running on https://1171-39-55-119-111.ngrok-free.app:${port}`);
     //await createSubscriptionOnServerStart();
 });
+
+module.exports = app;

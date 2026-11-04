@@ -2,8 +2,7 @@ require('dotenv').config();
 // FetchPayments.js
 const express = require('express');
 const router = express.Router();
-const { createMollieClient } = require('@mollie/api-client');
-const mollieClient = createMollieClient({ apiKey: process.env.MOLLIE_API_KEY });
+const getMollieClient = require("../utils/mollieClient");
 
 function normalizeList(result) {
     const list = Array.isArray(result)
@@ -29,7 +28,7 @@ router.get('/fetch-payments', async (req, res) => {
 
         while (allPayments.length < maxRecords && safety < 1000) {
             safety += 1;
-            const result = await mollieClient.payments.page({
+            const result = await getMollieClient().payments.page({
                 limit: pageSize,
                 ...(from ? { from } : {}),
             });
@@ -80,7 +79,7 @@ router.get('/fetch-payment/:paymentId', async (req, res) => {
             return res.status(400).json({ error: 'paymentId is required' });
         }
 
-        const payment = await mollieClient.payments.get(paymentId);
+        const payment = await getMollieClient().payments.get(paymentId);
         return res.json(payment);
     } catch (error) {
         console.error('Error fetching payment by id:', error);
@@ -96,7 +95,7 @@ router.get('/fetch-customer/:customerId', async (req, res) => {
             return res.status(400).json({ error: 'customerId is required' });
         }
 
-        const customer = await mollieClient.customers.get(customerId);
+        const customer = await getMollieClient().customers.get(customerId);
         return res.json(customer);
     } catch (error) {
         console.error('Error fetching customer by id:', error);
@@ -112,7 +111,7 @@ router.get('/fetch-customer-mandates/:customerId', async (req, res) => {
             return res.status(400).json({ error: 'customerId is required' });
         }
 
-        const result = await mollieClient.customers_mandates.page({ customerId });
+        const result = await getMollieClient().customers_mandates.page({ customerId });
         const mandates = result?._embedded?.mandates ?? result?.mandates ?? [];
         return res.json({ customerId, mandates });
     } catch (error) {
@@ -129,7 +128,7 @@ router.get('/fetch-customer-subscriptions/:customerId', async (req, res) => {
             return res.status(400).json({ error: 'customerId is required' });
         }
 
-        const result = await mollieClient.customers_subscriptions.page({ customerId });
+        const result = await getMollieClient().customers_subscriptions.page({ customerId });
         const subscriptions = result?._embedded?.subscriptions ?? result?.subscriptions ?? [];
         return res.json({ customerId, subscriptions });
     } catch (error) {
@@ -146,7 +145,7 @@ router.get('/fetch-customer-payments/:customerId', async (req, res) => {
             return res.status(400).json({ error: 'customerId is required' });
         }
 
-        const result = await mollieClient.customers_payments.page({ customerId });
+        const result = await getMollieClient().customers_payments.page({ customerId });
         const payments = result?._embedded?.payments ?? result?.payments ?? [];
         return res.json({ customerId, payments });
     } catch (error) {
@@ -163,7 +162,7 @@ router.get('/fetch-recent-transactions', async (req, res) => {
         const limit = Number.isFinite(limitRaw) ? Math.min(Math.max(limitRaw, 1), 250) : 20;
         const statusFilter = String(req.query?.status || '').trim().toLowerCase();
 
-        const result = await mollieClient.payments.page({ limit });
+        const result = await getMollieClient().payments.page({ limit });
         const list = Array.isArray(result)
             ? result
             : (result?._embedded?.payments ?? result?.payments ?? result?.data ?? []);
@@ -180,7 +179,7 @@ router.get('/fetch-recent-transactions', async (req, res) => {
         const customerMap = {};
         await Promise.all(customerIds.map(async (customerId) => {
             try {
-                const c = await mollieClient.customers.get(customerId);
+                const c = await getMollieClient().customers.get(customerId);
                 customerMap[customerId] = {
                     id: c?.id || customerId,
                     name: c?.name || '',
@@ -230,7 +229,7 @@ async function resolveCustomerId(idOrPaymentId) {
     const id = String(idOrPaymentId || '').trim();
     if (id.startsWith('cst_')) return id;
     if (id.startsWith('tr_')) {
-        const payment = await mollieClient.payments.get(id);
+        const payment = await getMollieClient().payments.get(id);
         return String(payment?.customerId || '');
     }
     return '';
@@ -261,10 +260,10 @@ router.get('/fetch-customer-profile/:id', async (req, res) => {
         }
 
         const [customer, mandatesResult, subscriptionsResult, paymentsResult] = await Promise.all([
-            mollieClient.customers.get(customerId),
-            mollieClient.customers_mandates.page({ customerId }),
-            mollieClient.customers_subscriptions.page({ customerId }),
-            mollieClient.customers_payments.page({ customerId }),
+            getMollieClient().customers.get(customerId),
+            getMollieClient().customers_mandates.page({ customerId }),
+            getMollieClient().customers_subscriptions.page({ customerId }),
+            getMollieClient().customers_payments.page({ customerId }),
         ]);
 
         const toArray = (r, key) => {

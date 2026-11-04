@@ -1,11 +1,10 @@
 const express = require('express');
-const { createMollieClient } = require('@mollie/api-client');
+const getMollieClient = require("../utils/mollieClient");
 const cors = require('cors');
 require('dotenv').config(); // Load .env at the top
 
 const router = express.Router();
 
-const mollieClient = createMollieClient({ apiKey: process.env.MOLLIE_API_KEY });
 
 const baseFrontendUrl = () =>
     String(process.env.BASE_FRONTEND_URL || 'http://localhost:3000').replace(/\/$/, '');
@@ -24,7 +23,7 @@ router.post('/create-payment', async (req, res) => {
     const amountStr = amountNum.toFixed(2);
 
     try {
-        const payment = await mollieClient.payments.create({
+        const payment = await getMollieClient().payments.create({
             amount: {
                 value: amount, // Amount in the selected currency
                 currency: 'EUR',

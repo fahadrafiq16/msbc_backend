@@ -1,5 +1,5 @@
 const express = require('express');
-const { createMollieClient } = require('@mollie/api-client');
+const getMollieClient = require("../utils/mollieClient");
 const cors = require('cors');
 require('dotenv').config(); // Load .env at the top
 const UserInfo = require('../models/UserInfo');
@@ -8,11 +8,10 @@ const router = express.Router();
 
 
 
-const mollieClient = createMollieClient({ apiKey: process.env.MOLLIE_API_KEY });
 
 async function listSubscriptions(customerId) {
     try {
-        const list = await mollieClient.customers_subscriptions.list({ customerId });
+        const list = await getMollieClient().customers_subscriptions.list({ customerId });
         return list?._embedded?.subscriptions ?? list?.subscriptions ?? [];
     } catch {
         return [];
@@ -21,7 +20,7 @@ async function listSubscriptions(customerId) {
 
 async function createOrReuseSubscription({ customerId, payload }) {
     try {
-        return await mollieClient.customers_subscriptions.create({ customerId, ...payload });
+        return await getMollieClient().customers_subscriptions.create({ customerId, ...payload });
     } catch (error) {
         // Mollie duplicate description: treat as success and reuse existing
         if (error?.statusCode === 422 && error?.field === 'description') {

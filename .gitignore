@@ -64,5 +64,3 @@ build/
 .vercel
 .env*
 
-# Safe configuration template
-!.env.example

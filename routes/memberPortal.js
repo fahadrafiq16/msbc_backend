@@ -1,11 +1,10 @@
 require('dotenv').config();
 const express = require("express");
-const { createMollieClient } = require("@mollie/api-client");
+const getMollieClient = require("../utils/mollieClient");
 const UserInfo = require("../models/UserInfo");
 const authenticateToken = require("../middleware/authMiddleware");
 
 const router = express.Router();
-const mollieClient = createMollieClient({ apiKey: process.env.MOLLIE_API_KEY });
 
 function toArray(r, key) {
   if (Array.isArray(r)) return r;
@@ -34,9 +33,9 @@ router.get("/member-portal/me", authenticateToken, async (req, res) => {
     if (customerId && customerId.startsWith("cst_")) {
       try {
         const [customer, subsResult, pmtsResult] = await Promise.all([
-          mollieClient.customers.get(customerId),
-          mollieClient.customers_subscriptions.page({ customerId }),
-          mollieClient.customers_payments.page({ customerId }),
+          getMollieClient().customers.get(customerId),
+          getMollieClient().customers_subscriptions.page({ customerId }),
+          getMollieClient().customers_payments.page({ customerId }),
         ]);
 
         const subscriptions = toArray(subsResult, "subscriptions");

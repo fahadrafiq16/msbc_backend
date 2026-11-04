@@ -2,14 +2,13 @@ require('dotenv').config();
 const sendEmail = require('../nodemailer-test.js'); // Adjust path as necessary
 const sendPTEmail = require('../ptFormEmail.js');
 const express = require('express');
-const { createMollieClient } = require('@mollie/api-client');
+const getMollieClient = require("../utils/mollieClient");
 const cors = require('cors');
 const nodemailer = require('nodemailer');
 const router = express.Router();
 const axios = require('axios');
 
 
-const mollieClient = createMollieClient({ apiKey: process.env.MOLLIE_API_KEY });
 
 const app = express();
 const port = process.env.PORT || 5000;
@@ -22,7 +21,7 @@ const nonRecurringPaymentWebhook = async (req, res) => {
     console.log('Payment Id', paymentId);
 
     try {
-        const payment = await mollieClient.payments.get(paymentId);
+        const payment = await getMollieClient().payments.get(paymentId);
         //console.log(payment.metadata);
 
         if (payment.status === 'paid') {
