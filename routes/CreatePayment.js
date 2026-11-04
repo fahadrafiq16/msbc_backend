@@ -25,7 +25,7 @@ router.post('/create-payment', async (req, res) => {
     try {
         const payment = await getMollieClient().payments.create({
             amount: {
-                value: amount, // Amount in the selected currency
+                value: amountStr, // Amount in the selected currency
                 currency: 'EUR',
             },
             description: `Payment for 123 ${userInfo.voornaam}`,
@@ -36,10 +36,13 @@ router.post('/create-payment', async (req, res) => {
             },
         });
 
-        res.json({ paymentUrl: payment.links.checkout.href });
+        res.json({ paymentUrl: payment.getCheckoutUrl() });
     } catch (error) {
         console.error('Error creating payment:', error);
-        res.status(500).json({ error: 'Failed to create payment' });
+        res.status(error.code === 'PAYMENT_NOT_CONFIGURED' ? 503 : 502).json({
+            error: error.code === 'PAYMENT_NOT_CONFIGURED' ? error.message : 'Payment could not be started. Please try again or contact the club.',
+            code: error.code === 'PAYMENT_NOT_CONFIGURED' ? error.code : 'PAYMENT_FAILED',
+        });
     }
 });
 

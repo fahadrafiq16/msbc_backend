@@ -6,7 +6,7 @@ const nodemailer = require('nodemailer');
 const sendEmail = require('./nodemailer-test.cjs');
 
 
-const mollieClient = createMollieClient({ apiKey: process.env.MOLLIE_API_KEY });
+const mollieClient = require('./utils/mollieClient')();
 
 const app = express();
 const port = process.env.PORT || 5000;

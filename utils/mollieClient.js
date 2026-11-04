@@ -1,10 +1,11 @@
 const { createMollieClient } = require('@mollie/api-client');
+
+// Explicit test-mode key shared by all backend payment routes.
+const MOLLIE_TEST_API_KEY = 'test_BDybrWRK8yQAhu9EzTcrmcFkhDGgvD';
 let client;
 module.exports = function getMollieClient() {
     if (!client) {
-        const apiKey = process.env.MOLLIE_API_KEY;
-        if (!apiKey) throw new Error('MOLLIE_API_KEY is not configured on the server');
-        client = createMollieClient({ apiKey });
+        client = createMollieClient({ apiKey: MOLLIE_TEST_API_KEY });
     }
     return client;
 };

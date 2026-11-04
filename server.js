@@ -149,7 +149,10 @@ app.post('/api/create-recurring-payment', async (req, res) => {
         res.json({ paymentUrl: payment.getCheckoutUrl() });
     } catch (error) {
         console.error('Error creating recurring payment:', error);
-        res.status(500).json({ message: 'Failed to create recurring payment' });
+        res.status(error.code === 'PAYMENT_NOT_CONFIGURED' ? 503 : 502).json({
+            message: error.code === 'PAYMENT_NOT_CONFIGURED' ? error.message : 'Recurring payment could not be started. Please try again or contact the club.',
+            code: error.code === 'PAYMENT_NOT_CONFIGURED' ? error.code : 'PAYMENT_FAILED',
+        });
     }
 });
 
