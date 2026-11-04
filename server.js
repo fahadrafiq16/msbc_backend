@@ -233,13 +233,10 @@ const toggleSchema = new mongoose.Schema({
 const Toggle = mongoose.model("Toggle", toggleSchema);
 
 // ✅ Get current toggle + amount
-app.get("/api/toggle", authenticateToken, async (req, res) => {
+app.get("/api/toggle", async (req, res) => {
     try {
-        let toggle = await Toggle.findOne();
-        if (!toggle) {
-            toggle = await Toggle.create({ value: false, amount: 15 }); // defaults
-        }
-        res.json({ value: toggle.value, amount: toggle.amount });
+        const toggle = await Toggle.findOne().lean();
+        res.json({ value: toggle?.value ?? false, amount: toggle?.amount ?? 15 });
     } catch (err) {
         res.status(500).json({ error: "Failed to fetch toggle" });
     }
