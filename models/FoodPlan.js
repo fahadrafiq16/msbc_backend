@@ -61,6 +61,10 @@ const foodPlanSchema = new mongoose.Schema(
     },
     // Voedingsschema informatie
     fields: { type: [fieldSchema], default: [] },
+    imageBlocks: { type: [new mongoose.Schema({
+      id: { type: String, required: true }, caption: { type: String, default: '', maxlength: 200 },
+      imageUrl: { type: String, default: '' }, imagePublicId: { type: String, default: '' }
+    }, { _id: false })], default: undefined },
     // Voedingsadvies (second box)
     adviceFields: { type: [fieldSchema], default: [] },
     // Meal plan (Maaltijd blocks)

@@ -283,6 +283,11 @@ router.put("/food-plans/:memberId", authenticateToken, async (req, res) => {
 
     const body = req.body || {};
     const update = {};
+    if (body.imageBlocks !== undefined) {
+      if (req.user?.role !== 'admin') return res.status(403).json({ success: false, error: 'Admin access required' });
+      if (!Array.isArray(body.imageBlocks) || body.imageBlocks.length > 50 || body.imageBlocks.some(b => !b || typeof b.id !== 'string' || !b.id || typeof b.caption !== 'string' || b.caption.length > 200 || typeof b.imageUrl !== 'string' || (b.imageUrl && !b.imageUrl.startsWith('https://')) || typeof b.imagePublicId !== 'string')) return res.status(400).json({ success: false, error: 'Invalid image blocks (maximum 50)' });
+      update.imageBlocks = body.imageBlocks.map(({id, caption, imageUrl, imagePublicId}) => ({id, caption, imageUrl, imagePublicId}));
+    }
     if (body.fields !== undefined) update.fields = normalizeFields(body.fields);
     if (body.adviceFields !== undefined) update.adviceFields = normalizeFields(body.adviceFields);
     if (body.mealPlan !== undefined) update.mealPlan = normalizeMealPlan(body.mealPlan);
