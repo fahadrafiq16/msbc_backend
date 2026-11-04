@@ -4,6 +4,55 @@ const cloudinary = require("cloudinary").v2;
 require("dotenv").config();
 
 const router = express.Router();
+const authenticateToken = require('../middleware/authMiddleware');
+const HomeSection = require('../models/HomeSection');
+
+router.delete('/gallery-videos', authenticateToken, async (req, res) => {
+    if (req.user?.role !== 'admin') {
+        return res.status(403).json({ success: false, error: 'Admin access required' });
+    }
+    const publicId = req.body?.publicId;
+    if (typeof publicId !== 'string' || !/^msbc\/gallery-videos\/[^\s]+$/.test(publicId) || publicId.includes('..')) {
+        return res.status(400).json({ success: false, error: 'Invalid gallery video ID' });
+    }
+    try {
+        const result = await cloudinary.uploader.destroy(publicId, { resource_type: 'video', invalidate: true });
+        if (!['ok', 'not found'].includes(result.result)) {
+            return res.status(502).json({ success: false, error: 'Cloudinary could not delete the video. Please retry.' });
+        }
+        await HomeSection.updateOne({ sectionKey: 'gallery' }, {
+            $pull: { galleryVideos: { videoPublicId: publicId } },
+        });
+        return res.json({ success: true });
+    } catch {
+        return res.status(502).json({ success: false, error: 'Could not complete video deletion. Please retry to finish removing it from Cloudinary and the gallery.' });
+    }
+});
+
+async function listGalleryVideos(_req, res) {
+    try {
+        const videos = [];
+        let nextCursor;
+        do {
+            const result = await cloudinary.api.resources({
+                resource_type: 'video', type: 'upload', prefix: 'msbc/gallery-videos/',
+                max_results: 500, ...(nextCursor ? { next_cursor: nextCursor } : {}),
+            });
+            videos.push(...result.resources.map((video) => ({
+                videoUrl: video.secure_url,
+                videoPublicId: video.public_id,
+                title: video.display_name || video.public_id.split('/').pop(),
+            })));
+            nextCursor = result.next_cursor;
+        } while (nextCursor);
+        res.json({ success: true, videos });
+    } catch (error) {
+        res.status(502).json({ success: false, error: 'Could not load videos from Cloudinary. Please try again.' });
+    }
+}
+
+router.get('/gallery-videos', authenticateToken, listGalleryVideos);
+router.get('/fetch-gallery-videos', listGalleryVideos);
 
 cloudinary.config({
     cloud_name: process.env.CLOUDINARY_CLOUD_NAME,

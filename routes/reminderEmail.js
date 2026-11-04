@@ -1,3 +1,4 @@
+require('dotenv').config();
 const express = require('express');
 const nodemailer = require('nodemailer');
 const authenticateToken = require('../middleware/authMiddleware');
@@ -25,7 +26,7 @@ router.post('/send-reminder-email', authenticateToken, async (req, res) => {
         service: 'gmail',
         auth: {
             user: 'fahadrafiq16@gmail.com',
-            pass: 'mwjuoyfenyuwesli',
+            pass: process.env.SMTP_PASSWORD,
         },
     });
 

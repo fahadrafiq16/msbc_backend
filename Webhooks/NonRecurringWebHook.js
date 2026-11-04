@@ -1,3 +1,4 @@
+require('dotenv').config();
 const sendEmail = require('../nodemailer-test.js'); // Adjust path as necessary
 const sendPTEmail = require('../ptFormEmail.js');
 const express = require('express');
@@ -8,7 +9,7 @@ const router = express.Router();
 const axios = require('axios');
 
 
-const mollieClient = createMollieClient({ apiKey: 'test_5CWPTEtF4FBvUwEnRcW2fMxBMwUzqt' });
+const mollieClient = createMollieClient({ apiKey: process.env.MOLLIE_API_KEY });
 
 const app = express();
 const port = process.env.PORT || 5000;

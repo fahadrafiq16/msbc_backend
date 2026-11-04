@@ -348,6 +348,16 @@ router.put("/home-sections/:sectionKey", authenticateToken, async (req, res) => 
         }
 
         const updates = { sectionKey };
+        if (Array.isArray(req.body.galleryVideos)) {
+            updates.galleryVideos = req.body.galleryVideos.map((video) => ({
+                videoUrl: typeof video?.videoUrl === "string" ? video.videoUrl.trim() : "",
+                videoPublicId: typeof video?.videoPublicId === "string" ? video.videoPublicId.trim() : "",
+                title: typeof video?.title === "string" ? video.title.trim() : "",
+            }));
+            if (updates.galleryVideos.some((video) => !/^https:\/\//i.test(video.videoUrl))) {
+                return res.status(400).json({ success: false, error: "A valid HTTPS video URL is required" });
+            }
+        }
 
         if (typeof title === "string") {
             updates.title = title.trim();

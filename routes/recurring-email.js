@@ -1,3 +1,4 @@
+require('dotenv').config();
 const express = require('express');
 const nodemailer = require('nodemailer');
 const router = express.Router();
@@ -50,7 +51,7 @@ router.post('/recurring-email', async (req, res) => {
         service: 'gmail', // or your preferred email service
         auth: {
             user: 'fahadrafiq16@gmail.com',
-            pass: 'mwjuoyfenyuwesli', // Use environment variables for security
+            pass: process.env.SMTP_PASSWORD, // Use environment variables for security
         },
     });
 

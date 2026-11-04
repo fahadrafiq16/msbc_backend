@@ -1,3 +1,4 @@
+require('dotenv').config();
 // nodemailer-test.cjs
 const nodemailer = require('nodemailer');
 
@@ -36,7 +37,7 @@ const sendEmail = async (
         service: 'gmail',
         auth: {
             user: 'fahadrafiq16@gmail.com', // Replace with your Gmail address
-            pass: 'mwjuoyfenyuwesli', // Replace with your Google app password
+            pass: process.env.SMTP_PASSWORD, // Replace with your Google app password
         },
     });
 

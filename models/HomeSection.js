@@ -104,6 +104,14 @@ const homeSectionSchema = new mongoose.Schema(
             type: [galleryItemSchema],
             default: [],
         },
+        galleryVideos: {
+            type: [new mongoose.Schema({
+                videoUrl: { type: String, required: true, trim: true },
+                videoPublicId: { type: String, default: "", trim: true },
+                title: { type: String, default: "", trim: true },
+            }, { _id: false })],
+            default: [],
+        },
         footerColumn1Title: { type: String, default: "", trim: true },
         footerColumn1Links: { type: [footerLinkSchema], default: [] },
         footerColumn4Title: { type: String, default: "", trim: true },

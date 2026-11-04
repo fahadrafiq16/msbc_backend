@@ -1,8 +1,9 @@
+require('dotenv').config();
 // FetchPayments.js
 const express = require('express');
 const router = express.Router();
 const { createMollieClient } = require('@mollie/api-client');
-const mollieClient = createMollieClient({ apiKey: 'test_5CWPTEtF4FBvUwEnRcW2fMxBMwUzqt' });
+const mollieClient = createMollieClient({ apiKey: process.env.MOLLIE_API_KEY });
 
 function normalizeList(result) {
     const list = Array.isArray(result)

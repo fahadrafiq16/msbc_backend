@@ -5,7 +5,7 @@ require('dotenv').config(); // Load .env at the top
 
 const router = express.Router();
 
-const mollieClient = createMollieClient({ apiKey: 'test_5CWPTEtF4FBvUwEnRcW2fMxBMwUzqt' });
+const mollieClient = createMollieClient({ apiKey: process.env.MOLLIE_API_KEY });
 
 const baseFrontendUrl = () =>
     String(process.env.BASE_FRONTEND_URL || 'http://localhost:3000').replace(/\/$/, '');

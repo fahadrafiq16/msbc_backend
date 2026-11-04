@@ -1,3 +1,4 @@
+require('dotenv').config();
 const express = require("express");
 const crypto = require("crypto");
 const bcrypt = require("bcryptjs");
@@ -14,7 +15,7 @@ function generatePassword(length = 12) {
 
 const getMailTransporter = () => {
   const user = process.env.SMTP_USER || "fahadrafiq16@gmail.com";
-  const pass = process.env.SMTP_PASS || "mwjuoyfenyuwesli";
+  const pass = process.env.SMTP_PASS || process.env.SMTP_PASSWORD;
   return nodemailer.createTransport({ service: "gmail", auth: { user, pass } });
 };
 

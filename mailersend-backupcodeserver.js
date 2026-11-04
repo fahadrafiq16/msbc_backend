@@ -1,3 +1,4 @@
+require('dotenv').config();
 const express = require('express');
 const { createMollieClient } = require('@mollie/api-client');
 const cors = require('cors');
@@ -5,7 +6,7 @@ const nodemailer = require('nodemailer');
 const sendEmail = require('./nodemailer-test.cjs');
 
 
-const mollieClient = createMollieClient({ apiKey: 'test_5CWPTEtF4FBvUwEnRcW2fMxBMwUzqt' });
+const mollieClient = createMollieClient({ apiKey: process.env.MOLLIE_API_KEY });
 
 const app = express();
 const port = process.env.PORT || 5000;

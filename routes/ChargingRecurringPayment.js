@@ -8,7 +8,7 @@ const router = express.Router();
 
 
 
-const mollieClient = createMollieClient({ apiKey: 'test_5CWPTEtF4FBvUwEnRcW2fMxBMwUzqt' });
+const mollieClient = createMollieClient({ apiKey: process.env.MOLLIE_API_KEY });
 
 async function listSubscriptions(customerId) {
     try {

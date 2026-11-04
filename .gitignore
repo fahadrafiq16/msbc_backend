@@ -60,3 +60,9 @@ build/
 
 # TypeScript files
 *.tsbuildinfo
+
+.vercel
+.env*
+
+# Safe configuration template
+!.env.example

@@ -12,7 +12,7 @@ const path = require("path");
 const BASE_FRONTEND_URL = process.env.BASE_FRONTEND_URL;
 const BASE_BACKEND_URL = process.env.BASE_BACKEND_URL;
 const MONGODB_URI = process.env.MONGODB_URI;
-const mollieClient = createMollieClient({ apiKey: 'test_5CWPTEtF4FBvUwEnRcW2fMxBMwUzqt' });
+const mollieClient = createMollieClient({ apiKey: process.env.MOLLIE_API_KEY });
 
 const app = express();
 app.use(express.json());
@@ -285,7 +285,7 @@ app.post("/api/toggle", authenticateToken, async (req, res) => {
 // const cron = require('node-cron');
 // const cronTransporter = nodemailer.createTransport({
 //   service: 'gmail',
-//   auth: { user: 'fahadrafiq16@gmail.com', pass: 'mwjuoyfenyuwesli' },
+//   auth: { user: 'fahadrafiq16@gmail.com', pass: process.env.SMTP_PASSWORD },
 // });
 // cron.schedule('*/1 * * * *', async () => {
 //   try {

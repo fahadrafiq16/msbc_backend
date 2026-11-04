@@ -1,10 +1,11 @@
+require('dotenv').config();
 const express = require("express");
 const { createMollieClient } = require("@mollie/api-client");
 const UserInfo = require("../models/UserInfo");
 const authenticateToken = require("../middleware/authMiddleware");
 
 const router = express.Router();
-const mollieClient = createMollieClient({ apiKey: "test_5CWPTEtF4FBvUwEnRcW2fMxBMwUzqt" });
+const mollieClient = createMollieClient({ apiKey: process.env.MOLLIE_API_KEY });
 
 function toArray(r, key) {
   if (Array.isArray(r)) return r;

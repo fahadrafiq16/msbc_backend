@@ -1,3 +1,4 @@
+require('dotenv').config();
 const express = require("express");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
@@ -26,7 +27,7 @@ const createTransporter = () => {
     }
 
     const fallbackUser = process.env.SMTP_USER || "fahadrafiq16@gmail.com";
-    const fallbackPass = process.env.SMTP_PASS || "mwjuoyfenyuwesli";
+    const fallbackPass = process.env.SMTP_PASS || process.env.SMTP_PASSWORD;
 
     if (!fallbackUser || !fallbackPass) {
         console.warn("SMTP configuration missing. Emails will not be sent.");
